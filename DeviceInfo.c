@@ -133,7 +133,5 @@ int main(void)
 
         printf("\n-------------------------\n");
     }
-
     return EXIT_SUCCESS;
 }
-

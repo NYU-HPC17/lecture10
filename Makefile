@@ -1,24 +1,31 @@
+EXECUTABLES = DeviceInfo
+CC = gcc49
 
-ifndef CC
-	CC = gcc
+all: $(EXECUTABLES)
+
+LDFLAGS += $(foreach librarydir,$(subst :, ,$(LD_LIBRARY_PATH)),-L$(librarydir))
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+  LDFLAGS += -lrt -lOpenCL
+  CFLAGS += -std=gnu99 -g -O2
+endif
+ifeq ($(UNAME_S),Darwin)
+  LDFLAGS +=  -framework OpenCL
+  CFLAGS += -std=c99 -g -O2
 endif
 
-CCFLAGS=-std=c99
-
-LIBS = -lOpenCL
-
-COMMON_DIR = ../../C_common
-
-# Check our platform and make sure we define the APPLE variable
-# and set up the right compiler flags and libraries
-PLATFORM = $(shell uname -s)
-ifeq ($(PLATFORM), Darwin)
-	LIBS = -framework OpenCL
+ifdef OPENCL_INC
+  CL_CFLAGS = -I$(OPENCL_INC)
 endif
+
+ifdef OPENCL_LIB
+  CL_LDFLAGS = -L$(OPENCL_LIB)
+endif
+
 
 DeviceInfo: DeviceInfo.c
-	$(CC) $^ $(CCFLAGS) $(LIBS) -I $(COMMON_DIR) -o $@
-
+	$(CC) $(CFLAGS) $(CL_CFLAGS) $(CL_LDFLAGS)  -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm -f DeviceInfo
+	rm -f $(EXECUTABLES) *.o
