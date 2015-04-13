@@ -1,4 +1,4 @@
-EXECUTABLES = DeviceInfo
+EXECUTABLES = DeviceInfo vec-add vec-add-pseudo-opencl vec-add-opencl
 CC = gcc49
 
 all: $(EXECUTABLES)
@@ -24,7 +24,16 @@ ifdef OPENCL_LIB
 endif
 
 
-DeviceInfo: DeviceInfo.c
+DeviceInfo: DeviceInfo.c cl-helper.c
+	$(CC) $(CFLAGS) $(CL_CFLAGS) $(CL_LDFLAGS)  -o $@ $^ $(LDFLAGS)
+
+vec-add: vec-add.c cl-helper.c
+	$(CC) $(CFLAGS) $(CL_CFLAGS) $(CL_LDFLAGS)  -o $@ $^ $(LDFLAGS)
+
+vec-add-pseudo-opencl: vec-add-pseudo-opencl.c cl-helper.c
+	$(CC) $(CFLAGS) $(CL_CFLAGS) $(CL_LDFLAGS)  -o $@ $^ $(LDFLAGS)
+
+vec-add-opencl: vec-add-opencl.c cl-helper.c
 	$(CC) $(CFLAGS) $(CL_CFLAGS) $(CL_LDFLAGS)  -o $@ $^ $(LDFLAGS)
 
 clean:
