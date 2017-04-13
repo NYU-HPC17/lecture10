@@ -1,5 +1,5 @@
 EXECUTABLES = DeviceInfo vec-add vec-add-pseudo-opencl vec-add-opencl
-CC = gcc49
+CC = gcc
 
 all: $(EXECUTABLES)
 
